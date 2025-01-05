@@ -1,10 +1,24 @@
 import { FC } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Menu, Home, HelpCircle, LogOut } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface NavigationHeaderProps {
   showProgress?: boolean;
@@ -21,54 +35,113 @@ export const NavigationHeader: FC<NavigationHeaderProps> = ({
   const progress = (currentStep / totalSteps) * 100;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center">
+    <motion.header
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+    >
+      <div className="container flex h-16 items-center justify-between mx-auto w-full">
         <div className="mr-4 flex">
-          <Link href="/" className="mr-6 flex items-center space-x-2">
-            <span className="font-bold">BeyondChat</span>
+          <Link href="/" className="mr-6 flex items-center space-x-2 group">
+            <motion.span
+              className="font-bold text-xl bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 400 }}
+            >
+              BeyondChat
+            </motion.span>
           </Link>
         </div>
 
-        {showProgress && (
-          <div className="hidden md:flex flex-1 items-center justify-center">
-            <div className="w-full max-w-md">
-              <Progress value={progress} className="h-2" />
-              <p className="text-sm text-muted-foreground mt-1 text-center">
-                Step {currentStep} of {totalSteps}
-              </p>
-            </div>
-          </div>
-        )}
-
-        <div className="flex flex-1 items-center justify-end space-x-2">
-          {session && (
-            <Button
-              variant="outline"
-              className="hidden md:flex"
-              onClick={() => (window.location.href = "/dashboard")}
+        <AnimatePresence>
+          {showProgress && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="hidden md:flex flex-1 items-center justify-center"
             >
-              Save & Exit
-            </Button>
+              <div className="w-full max-w-md">
+                <Progress value={progress} className="h-3 rounded-lg" />
+                <div className="flex justify-between mt-2">
+                  <span className="text-sm text-muted-foreground">
+                    Step {currentStep} of {totalSteps}
+                  </span>
+                  <span className="text-sm font-medium">
+                    {Math.round(progress)}% Complete
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="flex flex-1 items-center justify-end space-x-4">
+          {session && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="hidden md:flex gap-2 hover:bg-primary hover:text-primary-foreground transition-all"
+                    onClick={() => (window.location.href = "/dashboard")}
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Save & Exit
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  Save your progress and return to dashboard
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           )}
 
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" className="md:hidden" size="icon">
+              <Button
+                variant="ghost"
+                className="md:hidden"
+                size="icon"
+                aria-label="Menu"
+              >
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-              <nav className="flex flex-col gap-4">
+              <SheetHeader>
+                <SheetTitle className="flex items-center gap-2">
+                  {session?.user?.image && (
+                    <Avatar>
+                      <AvatarImage src={session.user.image} alt="Profile" />
+                      <AvatarFallback>
+                        {session.user.name?.[0] || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
+                  <span>{session?.user?.name || "Menu"}</span>
+                </SheetTitle>
+              </SheetHeader>
+              <nav className="flex flex-col gap-4 mt-6">
                 {session && (
                   <Button
                     variant="outline"
                     onClick={() => (window.location.href = "/dashboard")}
+                    className="flex items-center gap-2"
                   >
+                    <Home className="h-4 w-4" />
                     Save & Exit
                   </Button>
                 )}
-                <Button variant="outline" asChild>
-                  <Link href="/help">Help & Support</Link>
+                <Button
+                  variant="outline"
+                  asChild
+                  className="flex items-center gap-2"
+                >
+                  <Link href="/help">
+                    <HelpCircle className="h-4 w-4" />
+                    Help & Support
+                  </Link>
                 </Button>
               </nav>
             </SheetContent>
@@ -76,14 +149,26 @@ export const NavigationHeader: FC<NavigationHeaderProps> = ({
         </div>
       </div>
 
-      {showProgress && (
-        <div className="md:hidden px-4 pb-2">
-          <Progress value={progress} className="h-2" />
-          <p className="text-sm text-muted-foreground mt-1 text-center">
-            Step {currentStep} of {totalSteps}
-          </p>
-        </div>
-      )}
-    </header>
+      <AnimatePresence>
+        {showProgress && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="md:hidden px-4 pb-3"
+          >
+            <Progress value={progress} className="h-3 rounded-lg" />
+            <div className="flex justify-between mt-2">
+              <span className="text-sm text-muted-foreground">
+                Step {currentStep} of {totalSteps}
+              </span>
+              <span className="text-sm font-medium">
+                {Math.round(progress)}% Complete
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 };

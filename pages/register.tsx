@@ -18,6 +18,10 @@ import { signIn } from "next-auth/react";
 import { toast } from "sonner";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { motion } from "framer-motion";
+import { FcGoogle } from "react-icons/fc";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import { cn } from "@/lib/utils";
 
 const registerSchema = z.object({
   name: z.string().min(2).max(50),
@@ -38,6 +42,7 @@ type RegisterForm = z.infer<typeof registerSchema>;
 
 const Register: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const form = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
@@ -52,7 +57,6 @@ const Register: NextPage = () => {
   const onSubmit = async (data: RegisterForm) => {
     try {
       setIsLoading(true);
-      // TODO: Implement registration logic
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -60,16 +64,22 @@ const Register: NextPage = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Registration failed");
+        const error = await response.json();
+        throw new Error(error.error || "Registration failed");
       }
 
+      toast.success("Account created successfully!");
       await signIn("credentials", {
         email: data.email,
         password: data.password,
         callbackUrl: "/setup/organization",
       });
     } catch (error) {
-      toast.error("Registration failed. Please try again.");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Registration failed. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -77,176 +87,294 @@ const Register: NextPage = () => {
 
   return (
     <MainLayout showProgress currentStep={1} totalSteps={5}>
-      <div className="container max-w-[1200px] px-4 md:px-6 py-12">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="container max-w-[1200px] px-4 md:px-6 py-12"
+      >
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl">
-                Create your account
+          <div className="space-y-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="space-y-2"
+            >
+              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">
+                Welcome to BeyondChat
               </h1>
-              <p className="text-gray-500 dark:text-gray-400">
-                Enter your information below to create your account
+              <p className="text-lg text-gray-500 dark:text-gray-400">
+                Join thousands of businesses revolutionizing their customer
+                support
               </p>
-            </div>
-            <div className="space-y-4">
+            </motion.div>
+            <div className="space-y-6">
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
                   className="space-y-4"
                 >
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="John Doe" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="email"
-                            placeholder="john@example.com"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                          <Input type="password" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="terms"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <div className="space-y-1 leading-none">
-                          <FormLabel>
-                            I accept the{" "}
-                            <a
-                              href="/terms"
-                              className="text-primary underline-offset-4 hover:underline"
-                            >
-                              terms and conditions
-                            </a>
-                          </FormLabel>
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-base">Name</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="John Doe"
+                              {...field}
+                              className="h-12 text-base"
+                            />
+                          </FormControl>
                           <FormMessage />
-                        </div>
-                      </FormItem>
-                    )}
-                  />
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? "Creating account..." : "Create account"}
-                  </Button>
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-base">Email</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="email"
+                              placeholder="john@example.com"
+                              {...field}
+                              className="h-12 text-base"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-base">Password</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Input
+                                type={showPassword ? "text" : "password"}
+                                {...field}
+                                className="h-12 text-base pr-10"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2"
+                              >
+                                {showPassword ? (
+                                  <FiEyeOff className="h-5 w-5 text-gray-500" />
+                                ) : (
+                                  <FiEye className="h-5 w-5 text-gray-500" />
+                                )}
+                              </button>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.6 }}
+                  >
+                    <FormField
+                      control={form.control}
+                      name="terms"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              className="h-5 w-5"
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="text-sm">
+                              I accept the{" "}
+                              <a
+                                href="/terms"
+                                className="text-primary underline-offset-4 hover:underline"
+                              >
+                                terms and conditions
+                              </a>
+                            </FormLabel>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7 }}
+                  >
+                    <Button
+                      type="submit"
+                      className={cn(
+                        "w-full h-12 text-base transition-all",
+                        isLoading && "animate-pulse"
+                      )}
+                      disabled={isLoading}
+                    >
+                      {isLoading
+                        ? "Creating your account..."
+                        : "Create account"}
+                    </Button>
+                  </motion.div>
                 </form>
               </Form>
+
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t" />
                 </div>
-                <div className="relative flex justify-center text-xs uppercase">
+                <div className="relative flex justify-center text-sm">
                   <span className="bg-background px-2 text-muted-foreground">
                     Or continue with
                   </span>
                 </div>
               </div>
+
               <Button
                 variant="outline"
                 type="button"
-                className="w-full"
+                className="w-full h-12 text-base"
                 onClick={() =>
                   signIn("google", { callbackUrl: "/setup/organization" })
                 }
               >
+                <FcGoogle className="mr-2 h-5 w-5" />
                 Continue with Google
               </Button>
             </div>
           </div>
-          <div className="hidden lg:block">
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold">Why choose BeyondChat?</h2>
-              <ul className="space-y-4">
-                <li className="flex items-center space-x-2">
-                  <svg
-                    className="h-5 w-5 text-primary"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span>AI-powered customer support automation</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <svg
-                    className="h-5 w-5 text-primary"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span>Easy integration with your existing website</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <svg
-                    className="h-5 w-5 text-primary"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span>24/7 automated customer support</span>
-                </li>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.8 }}
+            className="hidden lg:block"
+          >
+            <div className="space-y-6 bg-muted p-8 rounded-2xl">
+              <h2 className="text-3xl font-bold">Why choose BeyondChat?</h2>
+              <ul className="space-y-6">
+                <motion.li
+                  whileHover={{ scale: 1.02 }}
+                  className="flex items-center space-x-4 bg-background p-4 rounded-lg"
+                >
+                  <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                    <svg
+                      className="h-6 w-6 text-primary"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">AI-powered Support</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Automate customer support with cutting-edge AI technology
+                    </p>
+                  </div>
+                </motion.li>
+
+                <motion.li
+                  whileHover={{ scale: 1.02 }}
+                  className="flex items-center space-x-4 bg-background p-4 rounded-lg"
+                >
+                  <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                    <svg
+                      className="h-6 w-6 text-primary"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Easy Integration</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Set up in minutes with our simple integration process
+                    </p>
+                  </div>
+                </motion.li>
+
+                <motion.li
+                  whileHover={{ scale: 1.02 }}
+                  className="flex items-center space-x-4 bg-background p-4 rounded-lg"
+                >
+                  <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                    <svg
+                      className="h-6 w-6 text-primary"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">24/7 Support</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Never miss a customer inquiry with round-the-clock
+                      automation
+                    </p>
+                  </div>
+                </motion.li>
               </ul>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     </MainLayout>
   );
 };
