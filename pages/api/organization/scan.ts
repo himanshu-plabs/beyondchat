@@ -38,27 +38,21 @@ export default async function handler(
       },
     });
 
-    // Hardcoded pages for testing
-    const pages = [
-      {
-        url: `${website}/about`,
-        status: "pending",
-        content: "About us page content",
-        organizationId: organization.id,
-      },
-      {
-        url: `${website}/products`,
-        status: "pending",
-        content: "Products page content",
-        organizationId: organization.id,
-      },
-      {
-        url: `${website}/contact`,
-        status: "pending",
-        content: "Contact page content",
-        organizationId: organization.id,
-      },
+    // Common pages to scan
+    const pagePaths = [
+      "", // index
+      "about",
+      "terms",
+      "contact",
+      "privacy",
     ];
+
+    const pages = pagePaths.map((path) => ({
+      url: `${website}${path ? `/${path}` : ""}`,
+      status: "pending",
+      content: "", // Empty content to be filled by actual scraping
+      organizationId: organization.id,
+    }));
 
     await prisma.page.createMany({
       data: pages,

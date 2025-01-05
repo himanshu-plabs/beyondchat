@@ -37,6 +37,7 @@ const TrainingSetup: NextPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [trainingProgress, setTrainingProgress] = useState(0);
   const [isTraining, setIsTraining] = useState(false);
+  const [loadingPages, setLoadingPages] = useState<Record<string, boolean>>({});
 
   const { data: pages = [], refetch } = useQuery<Page[]>({
     queryKey: ["pages"],
@@ -53,27 +54,51 @@ const TrainingSetup: NextPage = () => {
 
   const handleApprove = async (pageId: string) => {
     try {
+      setLoadingPages((prev) => ({ ...prev, [pageId]: true }));
       const response = await fetch(`/api/pages/${pageId}/approve`, {
         method: "POST",
       });
-      if (!response.ok) throw new Error("Failed to approve page");
-      refetch();
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to approve page");
+      }
+
+      await refetch();
       toast.success("Page approved for training");
     } catch (error) {
-      toast.error("Failed to approve page");
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Failed to approve page");
+      }
+    } finally {
+      setLoadingPages((prev) => ({ ...prev, [pageId]: false }));
     }
   };
 
   const handleReject = async (pageId: string) => {
     try {
+      setLoadingPages((prev) => ({ ...prev, [pageId]: true }));
       const response = await fetch(`/api/pages/${pageId}/reject`, {
         method: "POST",
       });
-      if (!response.ok) throw new Error("Failed to reject page");
-      refetch();
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to reject page");
+      }
+
+      await refetch();
       toast.success("Page rejected from training");
     } catch (error) {
-      toast.error("Failed to reject page");
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Failed to reject page");
+      }
+    } finally {
+      setLoadingPages((prev) => ({ ...prev, [pageId]: false }));
     }
   };
 
@@ -97,7 +122,8 @@ const TrainingSetup: NextPage = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to start training");
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to start training");
       }
 
       await response.json();
@@ -107,9 +133,13 @@ const TrainingSetup: NextPage = () => {
       toast.success("Training completed successfully");
       await router.push("/setup/customization");
     } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Failed to start training");
+      }
       setIsTraining(false);
       setTrainingProgress(0);
-      toast.error("Failed to start training");
     }
   };
 
@@ -203,17 +233,31 @@ const TrainingSetup: NextPage = () => {
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => handleApprove(page.id)}
-                                disabled={page?.status === "approved"}
+                                disabled={
+                                  page?.status === "approved" ||
+                                  loadingPages[page.id]
+                                }
                               >
-                                <ThumbsUp className="h-4 w-4" />
+                                {loadingPages[page.id] ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <ThumbsUp className="h-4 w-4" />
+                                )}
                               </Button>
                               <Button
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => handleReject(page.id)}
-                                disabled={page?.status === "rejected"}
+                                disabled={
+                                  page?.status === "rejected" ||
+                                  loadingPages[page.id]
+                                }
                               >
-                                <ThumbsDown className="h-4 w-4" />
+                                {loadingPages[page.id] ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <ThumbsDown className="h-4 w-4" />
+                                )}
                               </Button>
                             </div>
                           </TableCell>

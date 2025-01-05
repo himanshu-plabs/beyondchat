@@ -1,7 +1,19 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]";
-import { samplePages } from "@/lib/sample-data";
+import prisma from "@/lib/prisma";
+import { z } from "zod";
+
+const responseSchema = z.object({
+  id: z.string(),
+  status: z.literal("approved"),
+  url: z.string(),
+  content: z.string(),
+  error: z.string().nullable(),
+  organizationId: z.string(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+});
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,35 +23,60 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const session = await getServerSession(req, res, authOptions);
-
-  if (!session?.user?.id) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
-  const { id } = req.query;
-
-  if (!id || typeof id !== "string") {
-    return res.status(400).json({ error: "Invalid page ID" });
-  }
-
   try {
-    // For demo purposes, find the page in sample data
-    const page = samplePages.find((p) => p.id === id);
+    const session = await getServerSession(req, res, authOptions);
+
+    if (!session?.user?.id) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const { id } = req.query;
+
+    if (!id || typeof id !== "string") {
+      return res.status(400).json({ error: "Invalid page ID" });
+    }
+
+    // Find page in database
+    const page = await prisma.page.findUnique({
+      where: { id },
+      include: {
+        organization: {
+          include: {
+            users: true,
+          },
+        },
+      },
+    });
 
     if (!page) {
       return res.status(404).json({ error: "Page not found" });
     }
 
-    // Update page status
-    const updatedPage = {
-      ...page,
-      status: "approved",
-    };
+    // Verify user has access to this organization
+    const hasAccess = page.organization.users.some(
+      (user) => user.id === session.user.id
+    );
+    if (!hasAccess) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
 
-    return res.status(200).json(updatedPage);
+    // Update page status
+    const updatedPage = await prisma.page.update({
+      where: { id },
+      data: { status: "approved" },
+    });
+
+    // Validate response
+    const validatedPage = responseSchema.parse(updatedPage);
+
+    return res.status(200).json(validatedPage);
   } catch (error) {
     console.error("Error approving page:", error);
+    if (error instanceof z.ZodError) {
+      return res
+        .status(400)
+        .json({ error: "Invalid page data structure", details: error.errors });
+    }
     return res.status(500).json({ error: "Internal server error" });
   }
 }
