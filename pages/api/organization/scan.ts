@@ -38,24 +38,36 @@ export default async function handler(
       },
     });
 
-    // Start the website scanning process
-    // This would typically be handled by a background job
-    // For demo purposes, we'll create some sample pages
-    const samplePages = [
-      { url: website, status: "completed" },
-      { url: `${website}/about`, status: "completed" },
-      { url: `${website}/contact`, status: "completed" },
+    // Hardcoded pages for testing
+    const pages = [
+      {
+        url: `${website}/about`,
+        status: "pending",
+        content: "About us page content",
+        organizationId: organization.id,
+      },
+      {
+        url: `${website}/products`,
+        status: "pending",
+        content: "Products page content",
+        organizationId: organization.id,
+      },
+      {
+        url: `${website}/contact`,
+        status: "pending",
+        content: "Contact page content",
+        organizationId: organization.id,
+      },
     ];
 
     await prisma.page.createMany({
-      data: samplePages.map((page) => ({
-        ...page,
-        content: "Sample content",
-        organizationId: organization.id,
-      })),
+      data: pages,
     });
 
-    return res.status(200).json(organization);
+    return res.status(200).json({
+      organization,
+      pagesFound: pages.length,
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: error.errors });
