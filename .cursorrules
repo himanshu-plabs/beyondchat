@@ -1,0 +1,98 @@
+use typescript, next.js,
+use tailwindcss,
+use shadcn/ui
+use zod for validation
+use react query for data fetching
+use react hook form for form handling
+use react toast for toast notifications
+use react select for select input
+use react table for table component
+use resend for email sending
+use next auth for authentication
+
+## Mobile-Specific Considerations
+
+### Navigation:
+
+- Bottom navigation bar
+- Swipe gestures
+- Collapsible sections
+- Touch-friendly buttons (min 44px)
+
+### Forms:
+
+- Full-width inputs
+- Floating labels
+- Native select elements
+- Keyboard-aware layouts
+
+### Tables/Lists:
+
+- Horizontal scroll for tables
+- Card layout for complex data
+- Pull-to-refresh
+- Infinite scroll
+
+### Modals:
+
+- Full-screen on mobile
+- Slide-up animation
+- Easy dismiss gesture
+- Back button handling
+
+## Technical Implementation Notes
+
+### Analytics Implement
+
+## Animation Guidelines
+
+### Micro-interactions:
+
+- Button hover/active states
+- Form field focus
+- Loading spinners
+- Success/error states
+
+### Page Transitions:
+
+- Fade in/out
+- Slide transitions
+- Progress indicators
+- Skeleton loading
+
+### Feedback Animations:
+
+- Form validation
+- Success celebrations
+- Error shakes
+- Progress updates
+
+## Accessibility Considerations
+
+### ARIA Labels:
+
+- Form controls
+- Interactive elements
+- Status messages
+- Modal dialogs
+
+### Keyboard Navigation:
+
+- Focus management
+- Tab order
+- Shortcut keys
+- Focus trapping in modals
+
+### Screen Readers:
+
+- Alternative text
+- Semantic HTML
+- Status announcements
+- Error messaging
+
+### Responsive Testing:
+
+- Mobile devices (320px+)
+- Tablets (768px+)
+- Desktop (1024px+)
+- Large screens (1440px+)
