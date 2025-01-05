@@ -1,24 +1,28 @@
-import { type AppType } from "next/app";
-import { type Session } from "next-auth";
+import "@/styles/globals.css";
+import type { AppProps } from "next/app";
+import { ThemeProvider } from "@/components/theme-provider";
 import { SessionProvider } from "next-auth/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "sonner";
-import "@/styles/globals.css";
 
+// Create a client
 const queryClient = new QueryClient();
 
-const App: AppType<{ session: Session | null }> = ({
+export default function App({
   Component,
   pageProps: { session, ...pageProps },
-}) => {
+}: AppProps) {
   return (
-    <SessionProvider session={session}>
-      <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
-        <Toaster position="top-right" />
-      </QueryClientProvider>
-    </SessionProvider>
+    <QueryClientProvider client={queryClient}>
+      <SessionProvider session={session}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </SessionProvider>
+    </QueryClientProvider>
   );
-};
-
-export default App;
+}

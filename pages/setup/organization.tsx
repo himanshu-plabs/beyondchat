@@ -113,10 +113,13 @@ const Organization: NextPage = () => {
   };
 
   const getStatusBadge = (status: PageStatus["status"]) => {
-    const variants: Record<PageStatus["status"], string> = {
+    const variants: Record<
+      PageStatus["status"],
+      "default" | "secondary" | "destructive" | "outline"
+    > = {
       pending: "secondary",
-      scanning: "warning",
-      completed: "success",
+      scanning: "outline",
+      completed: "default",
       error: "destructive",
     };
     return <Badge variant={variants[status]}>{status}</Badge>;
