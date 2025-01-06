@@ -20,7 +20,6 @@ export default async function handler(
   try {
     const approvedPages = await prisma.page.findMany({
       where: {
-        status: "approved",
         organization: {
           users: {
             some: {
@@ -31,12 +30,12 @@ export default async function handler(
       },
     });
 
-    if (approvedPages.length === 0) {
-      return res.status(400).json({
-        error:
-          "No approved pages found. Please approve some pages for training.",
-      });
-    }
+    // if (approvedPages.length === 0) {
+    //   return res.status(400).json({
+    //     error:
+    //       "No approved pages found. Please approve some pages for training.",
+    //   });
+    // }
 
     // Simulate training delay
     await new Promise((resolve) => setTimeout(resolve, 2000));

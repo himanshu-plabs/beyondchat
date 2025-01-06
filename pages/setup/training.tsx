@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/router";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Loader2, Search, ThumbsDown, ThumbsUp } from "lucide-react";
 import {
   Table,
@@ -38,6 +38,14 @@ const TrainingSetup: NextPage = () => {
   const [trainingProgress, setTrainingProgress] = useState(0);
   const [isTraining, setIsTraining] = useState(false);
   const [loadingPages, setLoadingPages] = useState<Record<string, boolean>>({});
+  const [previewUrl, setPreviewUrl] = useState("");
+
+  useEffect(() => {
+    const storedUrl = localStorage.getItem("previewUrl");
+    if (storedUrl) {
+      setPreviewUrl(storedUrl);
+    }
+  }, []);
 
   const { data: pages = [], refetch } = useQuery<Page[]>({
     queryKey: ["pages"],

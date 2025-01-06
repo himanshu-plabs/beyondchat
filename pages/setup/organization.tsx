@@ -79,6 +79,9 @@ const OrganizationSetup: NextPage = () => {
     try {
       setIsScanning(true);
 
+      // Store website URL in localStorage
+      localStorage.setItem("previewUrl", data.website);
+
       // Simulate progress
       const interval = setInterval(() => {
         setScanProgress((prev) => {
@@ -109,10 +112,12 @@ const OrganizationSetup: NextPage = () => {
 
       toast.success(`Found ${result.pagesFound} pages to analyze`);
       await router.push("/setup/training");
-    } catch (error) {
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to scan website";
       setIsScanning(false);
       setScanProgress(0);
-      toast.error("Failed to scan website. Please try again.");
+      toast.error(errorMessage);
     }
   };
 
