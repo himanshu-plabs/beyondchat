@@ -55,9 +55,9 @@ export const Footer: FC = () => {
             className="group flex items-center gap-2 hover:bg-primary/10"
             asChild
           >
-            <a href="mailto:support@beyondchat.ai">
+            <a href="mailto:support@beyondchat.com">
               <Mail className="h-4 w-4 transition-transform group-hover:scale-110" />
-              <span className="text-sm">support@beyondchat.ai</span>
+              <span className="text-sm">support@beyondchat.com</span>
             </a>
           </Button>
         </motion.div>

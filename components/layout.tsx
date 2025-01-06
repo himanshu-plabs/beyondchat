@@ -125,7 +125,7 @@ export function Layout({ children }: LayoutProps) {
                   <DropdownMenuItem
                     className="text-red-500"
                     onClick={() => {
-                      signOut();
+                      // signOut();
                       router.push("/");
                     }}
                   >
