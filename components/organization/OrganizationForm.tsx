@@ -73,7 +73,7 @@ export function OrganizationForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <Card className="border-2">
+        <Card className="">
           <CardContent className="pt-6">
             <motion.div
               className="space-y-6"

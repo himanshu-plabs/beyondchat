@@ -62,7 +62,7 @@ export function ChatPreview({ previewUrl, formValues }: ChatPreviewProps) {
   };
 
   return (
-    <div className="relative aspect-video w-full rounded-lg border bg-background">
+    <div className="relative w-full min-h-[80vh] md:aspect-video rounded-lg border bg-background">
       <div className="absolute inset-0 flex items-center justify-center">
         {!previewUrl ? (
           <div className="text-center">
@@ -117,11 +117,11 @@ export function ChatPreview({ previewUrl, formValues }: ChatPreviewProps) {
       {isChatOpen && (
         <div
           className={cn(
-            "absolute w-[350px] h-[500px] bg-white rounded-lg shadow-xl border",
-            position === "bottom-right" && "bottom-16 right-4",
-            position === "bottom-left" && "bottom-16 left-4",
-            position === "top-right" && "top-16 right-4",
-            position === "top-left" && "top-16 left-4"
+            "absolute w-[350px] h-[500px] bg-white rounded-lg shadow-xl border mr-4 mb-4",
+            position === "bottom-right" && "bottom-16 right-0 md:right-4",
+            position === "bottom-left" && "bottom-16 left-0 md:left-4",
+            position === "top-right" && "top-16 right-0 md:right-4",
+            position === "top-left" && "top-16 left-0 md:left-4"
           )}
         >
           <div className="flex flex-col h-full">

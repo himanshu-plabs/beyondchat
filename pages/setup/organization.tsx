@@ -84,17 +84,7 @@ const OrganizationSetup: NextPage = () => {
             </p>
           </div>
 
-          <Card className="border-2">
-            <CardHeader>
-              <CardTitle>Organization Details</CardTitle>
-              <CardDescription>
-                Enter your organization information to get started
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <OrganizationForm onSubmit={onSubmit} isSubmitting={isScanning} />
-            </CardContent>
-          </Card>
+          <OrganizationForm onSubmit={onSubmit} isSubmitting={isScanning} />
         </div>
       </div>
 

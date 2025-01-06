@@ -35,12 +35,6 @@ export const Hero = () => {
             transition={{ delay: 0.3, duration: 0.5 }}
             className="flex flex-wrap gap-4 justify-center"
           >
-            <Button asChild size="lg" className="group">
-              <Link href="/register">
-                Get a demo
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </Button>
             <div className="flex items-center gap-2">
               <div className="flex -space-x-2">
                 {[1, 2, 3, 4].map((i) => (
@@ -55,6 +49,12 @@ export const Hero = () => {
               </span>
             </div>
           </motion.div>
+          <Button asChild size="lg" className="group">
+            <Link href="/register">
+              Start for free
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </Button>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
