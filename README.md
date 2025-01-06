@@ -95,15 +95,6 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 - Widget appearance preview
 - Mobile-responsive design
 
-## Mobile Optimization
-
-- Bottom navigation
-- Touch-friendly inputs (min 44px)
-- Swipe gestures
-- Responsive tables
-- Full-screen modals
-- Pull-to-refresh
-- Infinite scroll
 
 ## Contributing
 
