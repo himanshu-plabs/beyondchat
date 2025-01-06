@@ -84,14 +84,30 @@ const CustomizationSetup: NextPage = () => {
       <div className="min-h-[calc(100vh-4rem)] flex flex-col">
         <div className="flex-1 p-4 md:p-8">
           <div className="space-y-8">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl">
-                Customize Your Chatbot
-              </h1>
-              <p className="text-gray-500 dark:text-gray-400">
-                Personalize the appearance and behavior of your AI assistant to
-                match your brand.
-              </p>
+            <div className="flex justify-between items-center">
+              <div className="space-y-2">
+                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl">
+                  Customize Your Chatbot
+                </h1>
+                <p className="text-gray-500 dark:text-gray-400">
+                  Personalize the appearance and behavior of your AI assistant
+                  to match your brand.
+                </p>
+              </div>
+              <Button
+                type="submit"
+                onClick={form.handleSubmit(onSubmit)}
+                disabled={isSaving}
+              >
+                {isSaving ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving Changes...
+                  </>
+                ) : (
+                  "Save & Continue"
+                )}
+              </Button>
             </div>
 
             <ChatPreview
@@ -111,19 +127,6 @@ const CustomizationSetup: NextPage = () => {
                     <BehaviorForm control={form.control} />
                   </div>
                 </ScrollArea>
-
-                <div className="p-4 md:p-6 border-t">
-                  <Button type="submit" className="w-full" disabled={isSaving}>
-                    {isSaving ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Saving Changes...
-                      </>
-                    ) : (
-                      "Save & Continue"
-                    )}
-                  </Button>
-                </div>
               </div>
             </form>
           </Form>

@@ -62,26 +62,29 @@ export function ChatPreview({ previewUrl, formValues }: ChatPreviewProps) {
   };
 
   return (
-    <div className="relative w-full min-h-[80vh] md:aspect-video rounded-lg border bg-background">
+    <div className="relative w-full min-h-[70vh] md:aspect-video rounded-lg border bg-background">
       <div className="absolute inset-0 flex items-center justify-center">
         {!previewUrl ? (
-          <div className="text-center">
-            <p className="text-sm text-muted-foreground mb-2">
+          <div className="text-center w-full max-w-sm mx-auto">
+            <p className="text-sm text-muted-foreground mb-4 px-4">
               No website URL found. Please go back to the organization setup.
             </p>
             <Button
               variant="outline"
               onClick={() => router.push("/setup/organization")}
+              className="w-full sm:w-auto"
             >
               Go to Organization Setup
             </Button>
           </div>
         ) : (
-          <iframe
-            src={previewUrl}
-            className="h-full w-full rounded-lg"
-            sandbox="allow-same-origin allow-scripts"
-          />
+          <div className="w-full h-full max-w-6xl mx-auto">
+            <iframe
+              src={previewUrl}
+              className="h-full w-full rounded-lg shadow-lg"
+              sandbox="allow-same-origin allow-scripts"
+            />
+          </div>
         )}
       </div>
 
@@ -96,7 +99,7 @@ export function ChatPreview({ previewUrl, formValues }: ChatPreviewProps) {
       >
         <Button
           size="icon"
-          className={cn("h-12 w-12 rounded-full shadow-lg", buttonColor)}
+          className={cn("h-12 w-12 m-2 rounded-full shadow-lg", buttonColor)}
           onClick={() => {
             setIsChatOpen(!isChatOpen);
             if (messages.length === 0) {
@@ -117,7 +120,7 @@ export function ChatPreview({ previewUrl, formValues }: ChatPreviewProps) {
       {isChatOpen && (
         <div
           className={cn(
-            "absolute w-[350px] h-[500px] bg-white rounded-lg shadow-xl border mr-4 mb-4",
+            "absolute w-[250px] h-[350px] xs:w-[300px] xs:h-[500px] sm:w-[400px] sm:h-[600px] bg-white rounded-lg shadow-xl border m-2 md:m-4",
             position === "bottom-right" && "bottom-16 right-0 md:right-4",
             position === "bottom-left" && "bottom-16 left-0 md:left-4",
             position === "top-right" && "top-16 right-0 md:right-4",
