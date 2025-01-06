@@ -130,7 +130,7 @@ const TrainingSetup: NextPage = () => {
           }
           return prev + 5;
         });
-      }, 1000);
+      }, 500);
 
       const response = await fetch("/api/training/start", {
         method: "POST",
