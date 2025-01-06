@@ -31,7 +31,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -39,7 +40,7 @@ interface LayoutProps {
 export function Layout({ children }: LayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const isDesktop = useMediaQuery("(min-width: 1024px)");
-
+  const router = useRouter();
   // Close sidebar on mobile when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -121,7 +122,13 @@ export function Layout({ children }: LayoutProps) {
                   <DropdownMenuItem>Profile</DropdownMenuItem>
                   <DropdownMenuItem>Settings</DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-red-500">
+                  <DropdownMenuItem
+                    className="text-red-500"
+                    onClick={() => {
+                      signOut();
+                      router.push("/");
+                    }}
+                  >
                     Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
