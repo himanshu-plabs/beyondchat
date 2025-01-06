@@ -20,6 +20,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { NavigationHeader } from "@/components/layout/NavigationHeader";
+import { usePathname } from "next/navigation";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -28,6 +29,7 @@ interface LayoutProps {
 export function Layout({ children }: LayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -66,31 +68,33 @@ export function Layout({ children }: LayoutProps) {
               <div className="px-3">
                 <div className="space-y-1">
                   <Button
-                    variant="ghost"
-                    className="w-full justify-start gap-2 hover:bg-accent"
+                    variant={pathname === "/dashboard" ? "primary" : "ghost"}
+                    className="w-full justify-start gap-2 hover:bg-accent hover:text-white"
                   >
                     <Home className="h-5 w-5" /> Dashboard
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant={
+                      pathname === "/conversations" ? "secondary" : "ghost"
+                    }
                     className="w-full justify-start gap-2 hover:bg-accent"
                   >
                     <MessageSquare className="h-5 w-5" /> Conversations
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant={pathname === "/analytics" ? "secondary" : "ghost"}
                     className="w-full justify-start gap-2 hover:bg-accent"
                   >
                     <BarChart2 className="h-5 w-5" /> Analytics
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant={pathname === "/knowledge" ? "secondary" : "ghost"}
                     className="w-full justify-start gap-2 hover:bg-accent"
                   >
                     <BookOpen className="h-5 w-5" /> Knowledge Base
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant={pathname === "/settings" ? "secondary" : "ghost"}
                     className="w-full justify-start gap-2 hover:bg-accent"
                   >
                     <Settings className="h-5 w-5" /> Settings
@@ -104,19 +108,21 @@ export function Layout({ children }: LayoutProps) {
                 </h2>
                 <div className="space-y-1">
                   <Button
-                    variant="ghost"
+                    variant={pathname === "/crawler" ? "secondary" : "ghost"}
                     className="w-full justify-start gap-2 hover:bg-accent"
                   >
                     <Globe className="h-5 w-5" /> Website Crawler
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant={pathname === "/training" ? "secondary" : "ghost"}
                     className="w-full justify-start gap-2 hover:bg-accent"
                   >
                     <BookMarked className="h-5 w-5" /> Custom Training
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant={
+                      pathname === "/integration" ? "secondary" : "ghost"
+                    }
                     className="w-full justify-start gap-2 hover:bg-accent"
                   >
                     <Plug className="h-5 w-5" /> Integration
@@ -130,19 +136,19 @@ export function Layout({ children }: LayoutProps) {
                 </h2>
                 <div className="space-y-1">
                   <Button
-                    variant="ghost"
+                    variant={pathname === "/docs" ? "secondary" : "ghost"}
                     className="w-full justify-start gap-2 hover:bg-accent"
                   >
                     <FileText className="h-5 w-5" /> Documentation
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant={pathname === "/help" ? "secondary" : "ghost"}
                     className="w-full justify-start gap-2 hover:bg-accent"
                   >
                     <Help className="h-5 w-5" /> Help Center
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant={pathname === "/feedback" ? "secondary" : "ghost"}
                     className="w-full justify-start gap-2 hover:bg-accent"
                   >
                     <MessageCircle className="h-5 w-5" /> Feedback

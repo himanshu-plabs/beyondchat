@@ -326,24 +326,26 @@ export default function Dashboard() {
                         key={activity.id}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="flex items-center gap-4 rounded-lg border border-primary/10 bg-white/50 p-4 hover:bg-white/80 transition-colors"
+                        className="flex flex-col items-start gap-4 rounded-lg border border-primary/10 bg-white/50 p-4 hover:bg-white/80 transition-colors"
                       >
-                        <Avatar>
-                          <AvatarImage src={activity.avatar} />
-                          <AvatarFallback className="bg-primary/10">
-                            {activity.user.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium truncate">
-                            {activity.user}
-                          </p>
-                          <p className="text-sm text-muted-foreground truncate">
-                            {activity.action}
-                          </p>
+                        <div className="flex items-center gap-4">
+                          <Avatar className="shrink-0">
+                            <AvatarImage src={activity.avatar} />
+                            <AvatarFallback className="bg-primary/10">
+                              {activity.user.charAt(0)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex flex-col">
+                            <p className="font-medium truncate">
+                              {activity.user}
+                            </p>
+                          </div>
                         </div>
-                        <div className="text-right shrink-0">
-                          <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-muted-foreground truncate">
+                          {activity.action}
+                        </p>
+                        <div className="w-full sm:w-auto flex gap-2 items-center justify-between sm:text-right shrink-0">
+                          <p className="text-sm text-muted-foreground order-1 sm:order-none">
                             {activity.time}
                           </p>
                           <Badge
@@ -352,7 +354,7 @@ export default function Dashboard() {
                                 ? "default"
                                 : "secondary"
                             }
-                            className="mt-1 bg-gradient-to-r from-primary to-purple-500"
+                            className="bg-gradient-to-r from-primary to-purple-500 text-white"
                           >
                             {activity.status}
                           </Badge>
