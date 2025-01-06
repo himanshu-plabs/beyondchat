@@ -1,17 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Bell, HelpCircle, Menu, Search } from "lucide-react";
+import {
+  Bell,
+  HelpCircle,
+  Menu,
+  Search,
+  Home,
+  MessageSquare,
+  BarChart2,
+  BookOpen,
+  Settings,
+  Globe,
+  BookMarked,
+  Plug,
+  FileText,
+  HelpCircle as Help,
+  MessageCircle,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -20,6 +39,21 @@ interface LayoutProps {
 export function Layout({ children }: LayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const isDesktop = useMediaQuery("(min-width: 1024px)");
+
+  // Close sidebar on mobile when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!isDesktop && isSidebarOpen) {
+        const sidebar = document.getElementById("sidebar");
+        if (sidebar && !sidebar.contains(e.target as Node)) {
+          setIsSidebarOpen(false);
+        }
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isDesktop, isSidebarOpen]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -49,8 +83,9 @@ export function Layout({ children }: LayoutProps) {
             </div>
 
             <div className="flex items-center gap-4">
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="relative">
                 <Bell className="h-5 w-5" />
+                <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500"></span>
               </Button>
               <Button variant="ghost" size="icon">
                 <HelpCircle className="h-5 w-5" />
@@ -59,19 +94,36 @@ export function Layout({ children }: LayoutProps) {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="relative h-8 w-8 rounded-full"
+                    className="relative h-8 w-8 rounded-full ring-2 ring-primary/10 transition-all hover:ring-4"
                   >
                     <img
                       src="/placeholder-avatar.jpg"
                       alt="User"
-                      className="rounded-full"
+                      className="rounded-full object-cover"
                     />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem className="flex items-center gap-2">
+                    <img
+                      src="/placeholder-avatar.jpg"
+                      alt="User"
+                      className="h-6 w-6 rounded-full"
+                    />
+                    <div className="flex flex-col">
+                      <span className="font-medium">John Doe</span>
+                      <span className="text-xs text-muted-foreground">
+                        john@example.com
+                      </span>
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem>Profile</DropdownMenuItem>
                   <DropdownMenuItem>Settings</DropdownMenuItem>
-                  <DropdownMenuItem>Logout</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="text-red-500">
+                    Logout
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -83,64 +135,103 @@ export function Layout({ children }: LayoutProps) {
       <div className="flex pt-16">
         {/* Sidebar */}
         <aside
+          id="sidebar"
           className={cn(
-            "fixed left-0 z-40 h-[calc(100vh-4rem)] w-64 -translate-x-full border-r bg-background transition-transform lg:translate-x-0",
+            "fixed left-0 z-40 h-[calc(100vh-4rem)] w-64 -translate-x-full border-r bg-background shadow-lg transition-transform lg:shadow-none",
+            "lg:translate-x-0",
             isSidebarOpen && "translate-x-0"
           )}
         >
-          <div className="flex h-full flex-col">
-            <div className="space-y-4 py-4">
-              <div className="px-3 py-2">
+          <ScrollArea className="h-full py-6">
+            <div className="space-y-4">
+              <div className="px-3">
                 <div className="space-y-1">
-                  <Button variant="ghost" className="w-full justify-start">
-                    Dashboard
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-2 hover:bg-accent"
+                  >
+                    <Home className="h-5 w-5" /> Dashboard
                   </Button>
-                  <Button variant="ghost" className="w-full justify-start">
-                    Conversations
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-2 hover:bg-accent"
+                  >
+                    <MessageSquare className="h-5 w-5" /> Conversations
                   </Button>
-                  <Button variant="ghost" className="w-full justify-start">
-                    Analytics
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-2 hover:bg-accent"
+                  >
+                    <BarChart2 className="h-5 w-5" /> Analytics
                   </Button>
-                  <Button variant="ghost" className="w-full justify-start">
-                    Knowledge Base
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-2 hover:bg-accent"
+                  >
+                    <BookOpen className="h-5 w-5" /> Knowledge Base
                   </Button>
-                  <Button variant="ghost" className="w-full justify-start">
-                    Settings
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-2 hover:bg-accent"
+                  >
+                    <Settings className="h-5 w-5" /> Settings
                   </Button>
                 </div>
               </div>
-              <div className="px-3 py-2">
-                <h2 className="mb-2 px-4 text-lg font-semibold">
+              <Separator className="mx-3" />
+              <div className="px-3">
+                <h2 className="mb-2 px-4 text-sm font-semibold tracking-tight">
                   Training & Setup
                 </h2>
                 <div className="space-y-1">
-                  <Button variant="ghost" className="w-full justify-start">
-                    Website Crawler
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-2 hover:bg-accent"
+                  >
+                    <Globe className="h-5 w-5" /> Website Crawler
                   </Button>
-                  <Button variant="ghost" className="w-full justify-start">
-                    Custom Training
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-2 hover:bg-accent"
+                  >
+                    <BookMarked className="h-5 w-5" /> Custom Training
                   </Button>
-                  <Button variant="ghost" className="w-full justify-start">
-                    Integration
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-2 hover:bg-accent"
+                  >
+                    <Plug className="h-5 w-5" /> Integration
                   </Button>
                 </div>
               </div>
-              <div className="px-3 py-2">
-                <h2 className="mb-2 px-4 text-lg font-semibold">Support</h2>
+              <Separator className="mx-3" />
+              <div className="px-3">
+                <h2 className="mb-2 px-4 text-sm font-semibold tracking-tight">
+                  Support
+                </h2>
                 <div className="space-y-1">
-                  <Button variant="ghost" className="w-full justify-start">
-                    Documentation
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-2 hover:bg-accent"
+                  >
+                    <FileText className="h-5 w-5" /> Documentation
                   </Button>
-                  <Button variant="ghost" className="w-full justify-start">
-                    Help Center
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-2 hover:bg-accent"
+                  >
+                    <Help className="h-5 w-5" /> Help Center
                   </Button>
-                  <Button variant="ghost" className="w-full justify-start">
-                    Feedback
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-2 hover:bg-accent"
+                  >
+                    <MessageCircle className="h-5 w-5" /> Feedback
                   </Button>
                 </div>
               </div>
             </div>
-          </div>
+          </ScrollArea>
         </aside>
 
         {/* Main Content */}
