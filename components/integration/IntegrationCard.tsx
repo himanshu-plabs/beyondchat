@@ -1,22 +1,18 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import {
-  CopyIcon,
-  CheckIcon,
-  CodeIcon,
-  MailIcon,
-  ArrowRightIcon,
+  Copy,
+  Check,
+  Code2,
+  Mail,
+  ArrowRight,
+  ExternalLink,
+  Sparkles,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
 interface IntegrationCardProps {
@@ -53,98 +49,150 @@ export const IntegrationCard = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: 0.2 }}
-      className="grid gap-6"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
     >
-      <Card className="border-primary/20 shadow-lg">
-        <CardHeader className="p-4 sm:p-6">
-          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-            <CodeIcon className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" />
-            Integration
-          </CardTitle>
-          <CardDescription className="text-sm sm:text-base">
-            Choose your preferred integration method
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-4 sm:p-6">
+      <Card className="overflow-hidden bg-white/80 backdrop-blur-xl border-primary/10">
+        <div className="p-6 space-y-6">
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-primary/10 to-purple-500/10 border border-primary/10">
+                <Code2 className="h-5 w-5 text-primary" />
+              </div>
+              <h2 className="text-xl font-semibold bg-gradient-to-r from-primary via-purple-500 to-primary bg-clip-text text-transparent">
+                Integration
+              </h2>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Choose your preferred integration method
+            </p>
+          </div>
+
           <Tabs defaultValue="code" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-4 sm:mb-6">
+            <TabsList className="grid w-full grid-cols-2 h-14 rounded-lg p-1 bg-white/50 backdrop-blur-sm border border-primary/10">
               <TabsTrigger
                 value="code"
-                className="data-[state=active]:bg-primary data-[state=active]:text-white text-xs sm:text-sm px-2 sm:px-4"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/90 data-[state=active]:to-primary data-[state=active]:text-primary-foreground rounded-md transition-all data-[state=active]:shadow-lg"
               >
-                <CodeIcon className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 shrink-0" />
-                <span className="hidden sm:inline">Code</span> Snippet
+                <Code2 className="w-4 h-4 mr-2" />
+                Code Snippet
               </TabsTrigger>
               <TabsTrigger
                 value="email"
-                className="data-[state=active]:bg-primary data-[state=active]:text-white text-xs sm:text-sm px-2 sm:px-4"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/90 data-[state=active]:to-primary data-[state=active]:text-primary-foreground rounded-md transition-all data-[state=active]:shadow-lg"
               >
-                <MailIcon className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 shrink-0" />
-                <span className="hidden sm:inline">Email</span> Instructions
+                <Mail className="w-4 h-4 mr-2" />
+                Email Instructions
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="code" className="space-y-4">
-              <div className="relative">
-                <pre className="rounded-lg bg-secondary/50 p-3 sm:p-4 overflow-x-auto border border-primary/20 text-xs sm:text-sm">
-                  <code className="font-mono break-all sm:break-normal whitespace-pre-wrap sm:whitespace-pre">
-                    {snippetCode}
-                  </code>
+
+            <TabsContent value="code" className="mt-6 space-y-6">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="relative group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-purple-500/5 to-primary/5 rounded-lg -m-1" />
+                <pre className="relative rounded-lg bg-white/60 backdrop-blur-sm p-4 overflow-x-auto border border-primary/10 font-mono text-sm">
+                  <code>{snippetCode}</code>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={copyToClipboard}
+                    className="absolute right-2 top-2 h-8 hover:bg-primary/10 hover:text-primary transition-colors"
+                  >
+                    <AnimatePresence mode="wait">
+                      {copied ? (
+                        <motion.div
+                          key="check"
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.8 }}
+                          className="flex items-center gap-1.5"
+                        >
+                          <Check className="h-4 w-4" />
+                          Copied!
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="copy"
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.8 }}
+                          className="flex items-center gap-1.5"
+                        >
+                          <Copy className="h-4 w-4" />
+                          Copy
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </Button>
                 </pre>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="absolute right-2 top-2 h-6 w-6 sm:h-8 sm:w-8 hover:bg-primary/20"
-                  onClick={copyToClipboard}
-                >
-                  {copied ? (
-                    <CheckIcon className="h-3 w-3 sm:h-4 sm:w-4 text-green-500" />
-                  ) : (
-                    <CopyIcon className="h-3 w-3 sm:h-4 sm:w-4" />
-                  )}
-                </Button>
-              </div>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+              </motion.div>
+
+              <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
                 <Badge
                   variant="outline"
-                  className="text-primary border-primary/50 text-xs sm:text-sm shrink-0"
+                  className="bg-white/50 backdrop-blur-sm border-primary/20"
                 >
+                  <Sparkles className="w-3 h-3 mr-1 text-primary" />
                   Tip
                 </Badge>
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   Add this code to your website&apos;s HTML, just before the
                   closing &lt;/body&gt; tag.
                 </p>
               </div>
             </TabsContent>
-            <TabsContent value="email" className="space-y-4">
-              <p className="text-xs sm:text-sm text-muted-foreground">
-                We can email the integration instructions to your development
-                team.
-              </p>
-              <Button
-                variant="outline"
-                className="w-full hover:bg-primary/20 border-primary/50 h-8 sm:h-10 text-xs sm:text-sm"
-                onClick={() => toast.success("Instructions sent successfully")}
+
+            <TabsContent value="email" className="mt-6 space-y-6">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="space-y-4"
               >
-                <MailIcon className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 shrink-0" />
-                Email Instructions
-              </Button>
+                <p className="text-sm text-muted-foreground">
+                  We can email the integration instructions to your development
+                  team.
+                </p>
+                <Button
+                  variant="outline"
+                  className="w-full h-12 bg-white/50 backdrop-blur-sm border-primary/20 hover:bg-primary/5 hover:border-primary/30 transition-all"
+                  onClick={() =>
+                    toast.success("Instructions sent successfully")
+                  }
+                >
+                  <Mail className="w-4 h-4 mr-2" />
+                  Email Instructions
+                </Button>
+              </motion.div>
             </TabsContent>
           </Tabs>
 
-          <div className="mt-4 sm:mt-6">
+          <div className="space-y-4">
             <Button
-              className="w-full bg-primary hover:bg-primary/90 text-white group h-8 sm:h-10 text-xs sm:text-sm"
               onClick={onVerifyClick}
+              className="w-full h-12 bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-500/90 text-white shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300"
             >
+              <Sparkles className="w-4 h-4 mr-2" />
               Verify Integration
-              <ArrowRightIcon className="ml-1.5 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4 transition-transform group-hover:translate-x-1 shrink-0" />
+              <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
+
+            <a
+              href="https://docs.beyond-chat.com/integration"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
+            >
+              View Documentation
+              <ExternalLink className="h-4 w-4" />
+            </a>
           </div>
-        </CardContent>
+        </div>
       </Card>
     </motion.div>
   );
