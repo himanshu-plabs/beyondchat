@@ -40,17 +40,12 @@ export function ContentTable({
       TrainingPage["status"],
       { variant: "default" | "secondary" | "destructive"; text: string }
     > = {
-      pending: { variant: "secondary", text: "Pending Review" },
+      pending: { variant: "secondary", text: "Pending" },
       approved: { variant: "default", text: "Approved" },
       rejected: { variant: "destructive", text: "Rejected" },
     };
     return (
-      <Badge
-        variant={variants[status].variant}
-        className="bg-white/50 backdrop-blur-sm"
-      >
-        {variants[status].text}
-      </Badge>
+      <Badge variant={variants[status].variant}>{variants[status].text}</Badge>
     );
   };
 
@@ -91,7 +86,7 @@ export function ContentTable({
                 <TableCell>
                   <Badge
                     variant="outline"
-                    className="bg-white/50 backdrop-blur-sm border-primary/10"
+                    className="bg-purple-500/90 backdrop-blur-sm border-primary/10 text-white"
                   >
                     {page?.category}
                   </Badge>

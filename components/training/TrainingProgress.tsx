@@ -126,20 +126,20 @@ export function TrainingProgress({
           </div>
 
           <AnimatePresence>
-            {progress === 100 && (
+            {progress !== 100 && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="rounded-lg bg-emerald-50 dark:bg-emerald-900/20 p-3 sm:p-4 border border-emerald-200 dark:border-emerald-800"
+                className="rounded-lg p-3 sm:p-4 border border-green-500 bg-white/50 backdrop-blur-sm"
               >
-                <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300">
+                <div className="flex items-center gap-2 text-green-600">
                   <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="text-sm sm:text-base font-medium">
                     Training Complete
                   </span>
                 </div>
-                <div className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-emerald-700 dark:text-emerald-400">
+                <div className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-green-600">
                   Your AI model has been successfully trained with the approved
                   content.
                 </div>
