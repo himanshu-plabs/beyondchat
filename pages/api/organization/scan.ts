@@ -27,6 +27,9 @@ export default async function handler(
   try {
     const { name, website, description } = organizationSchema.parse(req.body);
 
+    // Add 5 second delay
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
     const organization = await prisma.organization.create({
       data: {
         name,
