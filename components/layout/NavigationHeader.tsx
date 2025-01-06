@@ -8,10 +8,9 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Tooltip,
@@ -38,18 +37,34 @@ export const NavigationHeader: FC<NavigationHeaderProps> = ({
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      className="sticky top-0 z-50 w-full border-b border-primary/10 bg-white/80 backdrop-blur-xl"
     >
-      <div className="container flex h-16 items-center justify-between mx-auto w-full">
-        <div className="mr-4 flex">
-          <Link href="/" className="mr-6 flex items-center space-x-2 group">
-            <motion.span
-              className="font-bold text-xl bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent"
+      {/* Progress bar */}
+      {showProgress && (
+        <div className="absolute bottom-0 left-0 w-full h-0.5 bg-primary/10">
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            className="h-full bg-gradient-to-r from-primary to-purple-500"
+          />
+        </div>
+      )}
+
+      <div className="container flex h-16 items-center justify-between mx-auto w-full px-4">
+        <div className="flex items-center gap-6">
+          {/* Logo */}
+          <Link href="/" className="flex items-center space-x-2">
+            <motion.div
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 400 }}
+              className="relative"
             >
-              BeyondChat
-            </motion.span>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-purple-500/20 blur-xl" />
+              <span className="relative font-bold text-xl bg-gradient-to-r from-primary via-purple-500 to-primary bg-clip-text text-transparent">
+                BeyondChat
+              </span>
+            </motion.div>
           </Link>
         </div>
       </div>
