@@ -85,34 +85,38 @@ export const NavigationHeader: FC<NavigationHeaderProps> = ({
           </Link>
 
           {/* Search Bar */}
-          <div className="hidden md:flex flex-1 max-w-xl">
-            <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search..."
-                className="pl-10 bg-white/60 border-primary/10 focus:border-primary/20 focus:ring-primary/10"
-              />
+          {session && (
+            <div className="hidden md:flex flex-1 max-w-xl">
+              <div className="relative w-full">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search..."
+                  className="pl-10 bg-white/60 border-primary/10 focus:border-primary/20 focus:ring-primary/10"
+                />
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Right Section */}
         <div className="flex items-center gap-2">
           <TooltipProvider>
             {/* Notifications */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="relative hover:bg-primary/10 hover:text-primary"
-                >
-                  <Bell className="h-5 w-5" />
-                  <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Notifications</TooltipContent>
-            </Tooltip>
+            {session && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="relative hover:bg-primary/10 hover:text-primary"
+                  >
+                    <Bell className="h-5 w-5" />
+                    <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Notifications</TooltipContent>
+              </Tooltip>
+            )}
 
             {/* Help */}
             <Tooltip>
