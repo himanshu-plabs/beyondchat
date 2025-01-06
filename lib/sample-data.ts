@@ -184,3 +184,63 @@ export const sampleCustomizations = {
     ],
   },
 };
+
+export const sampleTrainingPages = [
+  {
+    id: "1",
+    url: "https://docs.example.com/getting-started",
+    content:
+      "Welcome to our comprehensive documentation. This guide will help you get started with our platform...",
+    relevanceScore: 0.95,
+    status: "approved",
+    lastModified: "2024-02-15T10:30:00Z",
+    wordCount: 1250,
+    category: "documentation",
+  },
+  {
+    id: "2",
+    url: "https://docs.example.com/api-reference",
+    content:
+      "API Reference Documentation: This section covers all available endpoints, authentication methods...",
+    relevanceScore: 0.88,
+    status: "pending",
+    lastModified: "2024-02-14T15:45:00Z",
+    wordCount: 3200,
+    category: "api",
+  },
+  {
+    id: "3",
+    url: "https://blog.example.com/best-practices",
+    content:
+      "Learn about the best practices for implementing our solutions in your workflow...",
+    relevanceScore: 0.75,
+    status: "pending",
+    lastModified: "2024-02-13T09:15:00Z",
+    wordCount: 850,
+    category: "blog",
+  },
+  {
+    id: "4",
+    url: "https://docs.example.com/tutorials",
+    content:
+      "Step-by-step tutorials to help you master advanced features and implementations...",
+    relevanceScore: 0.92,
+    status: "approved",
+    lastModified: "2024-02-12T14:20:00Z",
+    wordCount: 2100,
+    category: "tutorial",
+  },
+  {
+    id: "5",
+    url: "https://support.example.com/faq",
+    content:
+      "Frequently asked questions about common issues and their solutions...",
+    relevanceScore: 0.68,
+    status: "rejected",
+    lastModified: "2024-02-11T11:10:00Z",
+    wordCount: 450,
+    category: "support",
+  },
+] as const;
+
+export type TrainingPage = (typeof sampleTrainingPages)[number];
