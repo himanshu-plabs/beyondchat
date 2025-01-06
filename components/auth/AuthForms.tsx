@@ -6,7 +6,15 @@ import { signIn } from "next-auth/react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { FcGoogle } from "react-icons/fc";
-import { Eye, EyeOff, Mail, User, Lock, ArrowRight } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  User,
+  Lock,
+  ArrowRight,
+  Sparkles,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -129,30 +137,30 @@ export const AuthForms = () => {
   };
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full space-y-6 p-6">
       <Tabs
         value={authType}
         onValueChange={(v) => setAuthType(v as "credentials" | "email")}
         className="w-full"
       >
-        <TabsList className="grid w-full grid-cols-2 h-14 rounded-lg p-1 bg-muted/20">
+        <TabsList className="grid w-full grid-cols-2 h-14 rounded-lg p-1 bg-white/50 backdrop-blur-sm border border-primary/10">
           <TabsTrigger
             value="credentials"
-            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/90 data-[state=active]:to-primary data-[state=active]:text-primary-foreground rounded-md transition-all"
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/90 data-[state=active]:to-primary data-[state=active]:text-primary-foreground rounded-md transition-all data-[state=active]:shadow-lg"
           >
             <Lock className="w-4 h-4 mr-2" />
             Password
           </TabsTrigger>
           <TabsTrigger
             value="email"
-            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/90 data-[state=active]:to-primary data-[state=active]:text-primary-foreground rounded-md transition-all"
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/90 data-[state=active]:to-primary data-[state=active]:text-primary-foreground rounded-md transition-all data-[state=active]:shadow-lg"
           >
             <Mail className="w-4 h-4 mr-2" />
             Magic Link
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="credentials">
+        <TabsContent value="credentials" className="mt-6">
           <Form {...credentialsForm}>
             <form
               onSubmit={credentialsForm.handleSubmit(handleCredentialsSignUp)}
@@ -177,7 +185,7 @@ export const AuthForms = () => {
                           <Input
                             placeholder="John Doe"
                             {...field}
-                            className="h-12 text-base pl-11 transition-colors focus:ring-2 focus:ring-primary/20"
+                            className="h-12 text-base pl-11 bg-white/50 backdrop-blur-sm border-primary/10 transition-all hover:border-primary/20 focus:border-primary focus:ring-2 focus:ring-primary/20"
                           />
                         </div>
                       </FormControl>
@@ -207,7 +215,7 @@ export const AuthForms = () => {
                             type="email"
                             placeholder="john@example.com"
                             {...field}
-                            className="h-12 text-base pl-11 transition-colors focus:ring-2 focus:ring-primary/20"
+                            className="h-12 text-base pl-11 bg-white/50 backdrop-blur-sm border-primary/10 transition-all hover:border-primary/20 focus:border-primary focus:ring-2 focus:ring-primary/20"
                           />
                         </div>
                       </FormControl>
@@ -231,17 +239,17 @@ export const AuthForms = () => {
                         Password
                       </FormLabel>
                       <FormControl>
-                        <div className="relative">
+                        <div className="relative group">
                           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                           <Input
                             type={showPassword ? "text" : "password"}
                             {...field}
-                            className="h-12 text-base pl-11 pr-11 transition-colors focus:ring-2 focus:ring-primary/20"
+                            className="h-12 text-base pl-11 pr-11 bg-white/50 backdrop-blur-sm border-primary/10 transition-all hover:border-primary/20 focus:border-primary focus:ring-2 focus:ring-primary/20"
                           />
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 hover:text-primary transition-colors"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
                           >
                             {showPassword ? (
                               <EyeOff className="h-5 w-5" />
@@ -271,7 +279,7 @@ export const AuthForms = () => {
                         <Checkbox
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          className="h-5 w-5 rounded-md border-2 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                          className="h-5 w-5 rounded-md border-2 data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-primary/90 data-[state=checked]:to-primary data-[state=checked]:border-primary"
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
@@ -295,11 +303,12 @@ export const AuthForms = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7 }}
+                className="pt-2"
               >
                 <Button
                   type="submit"
                   className={cn(
-                    "w-full h-12 text-base font-medium transition-all bg-gradient-to-r from-primary/90 to-primary hover:opacity-90",
+                    "w-full h-12 text-base font-medium transition-all bg-gradient-to-r from-primary/90 to-primary hover:opacity-90 shadow-lg hover:shadow-primary/20",
                     isLoading && "animate-pulse"
                   )}
                   disabled={isLoading}
@@ -308,6 +317,7 @@ export const AuthForms = () => {
                     "Creating your account..."
                   ) : (
                     <>
+                      <Sparkles className="mr-2 h-5 w-5" />
                       Create account
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </>
@@ -318,7 +328,7 @@ export const AuthForms = () => {
           </Form>
         </TabsContent>
 
-        <TabsContent value="email">
+        <TabsContent value="email" className="mt-6">
           <Form {...emailForm}>
             <form
               onSubmit={emailForm.handleSubmit(handleEmailSignIn)}
@@ -344,7 +354,7 @@ export const AuthForms = () => {
                             type="email"
                             placeholder="john@example.com"
                             {...field}
-                            className="h-12 text-base pl-11 transition-colors focus:ring-2 focus:ring-primary/20"
+                            className="h-12 text-base pl-11 bg-white/50 backdrop-blur-sm border-primary/10 transition-all hover:border-primary/20 focus:border-primary focus:ring-2 focus:ring-primary/20"
                           />
                         </div>
                       </FormControl>
@@ -368,7 +378,7 @@ export const AuthForms = () => {
                         <Checkbox
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          className="h-5 w-5 rounded-md border-2 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                          className="h-5 w-5 rounded-md border-2 data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-primary/90 data-[state=checked]:to-primary data-[state=checked]:border-primary"
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
@@ -392,11 +402,12 @@ export const AuthForms = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7 }}
+                className="pt-2"
               >
                 <Button
                   type="submit"
                   className={cn(
-                    "w-full h-12 text-base font-medium transition-all bg-gradient-to-r from-primary/90 to-primary hover:opacity-90",
+                    "w-full h-12 text-base font-medium transition-all bg-gradient-to-r from-primary/90 to-primary hover:opacity-90 shadow-lg hover:shadow-primary/20",
                     isLoading && "animate-pulse"
                   )}
                   disabled={isLoading}
@@ -410,12 +421,12 @@ export const AuthForms = () => {
         </TabsContent>
       </Tabs>
 
-      <div className="relative py-4">
+      <div className="relative py-6">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-muted" />
+          <span className="w-full border-t border-primary/10" />
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="bg-background px-4 text-muted-foreground">
+          <span className="px-4 text-muted-foreground bg-white/50 backdrop-blur-sm rounded-full border border-primary/10">
             Or continue with
           </span>
         </div>
@@ -424,7 +435,7 @@ export const AuthForms = () => {
       <Button
         variant="outline"
         type="button"
-        className="w-full h-12 text-base font-medium border-2 hover:bg-muted/5 transition-colors"
+        className="w-full h-12 text-base font-medium bg-white/50 backdrop-blur-sm border-primary/10 hover:bg-primary/5 hover:border-primary/20 transition-all"
         onClick={() => signIn("google", { callbackUrl: "/setup/organization" })}
       >
         <FcGoogle className="mr-2 h-5 w-5" />

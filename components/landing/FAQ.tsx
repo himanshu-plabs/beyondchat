@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, HelpCircle, Sparkles } from "lucide-react";
 
 const faqs = [
   {
@@ -17,7 +17,7 @@ const faqs = [
   {
     question: "Do I need a credit card?",
     answer:
-      "No, you don't need a credit card to start. You can try our chatbot free for 14 days and only pay once you're satisfied with the service.",
+      "No, you don&apos;t need a credit card to start. You can try our chatbot free for 14 days and only pay once you&apos;re satisfied with the service.",
   },
   {
     question: "Can you integrate with our CRM?",
@@ -43,8 +43,12 @@ const faqs = [
 
 export const FAQ = () => {
   return (
-    <section className="py-20 bg-gray-50">
-      <div className="container px-4 md:px-6">
+    <section className="py-20 bg-gray-50/50 relative overflow-hidden">
+      {/* Background decorations */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+      <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white" />
+
+      <div className="container px-4 md:px-6 relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -52,7 +56,10 @@ export const FAQ = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl font-bold tracking-tight mb-4">
+          <div className="inline-flex items-center justify-center p-2 mb-4 rounded-full bg-primary/5 text-primary">
+            <HelpCircle className="w-6 h-6" />
+          </div>
+          <h2 className="text-3xl font-bold tracking-tight mb-4 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
             Frequently Asked Questions
           </h2>
           <p className="text-muted-foreground max-w-[600px] mx-auto">
@@ -70,17 +77,24 @@ export const FAQ = () => {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.5 }}
               >
-                <AccordionItem value={`item-${i}`} className="border-b">
-                  <AccordionTrigger className="hover:no-underline hover:bg-muted/50 px-4 py-4 rounded-lg transition-all">
-                    <span className="text-left font-medium">
-                      {faq.question}
-                    </span>
+                <AccordionItem
+                  value={`item-${i}`}
+                  className="group border-b border-primary/10"
+                >
+                  <AccordionTrigger className="hover:no-underline data-[state=open]:text-primary transition-colors py-6">
+                    <div className="flex items-center text-left gap-3">
+                      <div className="flex-shrink-0 w-2 h-2 rounded-full bg-primary/30 group-data-[state=open]:bg-primary transition-colors" />
+                      <span className="font-medium group-hover:text-primary">
+                        {faq.question}
+                      </span>
+                    </div>
                   </AccordionTrigger>
-                  <AccordionContent className="px-4 pb-4 pt-2">
+                  <AccordionContent className="px-5 pb-6 pt-2">
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.2 }}
+                      className="text-muted-foreground"
                     >
                       {faq.answer}
                     </motion.div>
@@ -96,9 +110,9 @@ export const FAQ = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.4, duration: 0.5 }}
-          className="mt-12 text-center"
+          className="mt-16 text-center"
         >
-          <h3 className="text-2xl font-bold mb-6">
+          <h3 className="text-2xl font-bold mb-6 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
             Ready to take BeyondChats for a spin?
           </h3>
           <p className="text-muted-foreground mb-8">
@@ -106,11 +120,19 @@ export const FAQ = () => {
             in just a few hours.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Button size="lg" className="group">
+            <Button
+              size="lg"
+              className="group bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-lg hover:shadow-primary/20"
+            >
+              <Sparkles className="w-4 h-4 mr-2" />
               Start a free trial
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Button>
-            <Button variant="outline" size="lg">
+            <Button
+              variant="outline"
+              size="lg"
+              className="group hover:bg-primary/5"
+            >
               Book a demo
             </Button>
           </div>

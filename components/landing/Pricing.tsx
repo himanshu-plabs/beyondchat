@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 
 const plans = [
   {
@@ -16,6 +16,8 @@ const plans = [
       "Restricted dashboard",
     ],
     popular: false,
+    gradient: "from-blue-500/10 via-purple-500/5 to-pink-500/10",
+    buttonVariant: "outline" as const,
   },
   {
     name: "Standard",
@@ -29,6 +31,8 @@ const plans = [
       "Emailers: Daily Stats + Monthly analysis",
     ],
     popular: true,
+    gradient: "from-primary via-purple-500 to-primary",
+    buttonVariant: "default" as const,
   },
   {
     name: "Business",
@@ -43,6 +47,8 @@ const plans = [
       "Qualified Business leads",
     ],
     popular: false,
+    gradient: "from-purple-500/10 via-pink-500/5 to-rose-500/10",
+    buttonVariant: "outline" as const,
   },
   {
     name: "Enterprise",
@@ -57,6 +63,8 @@ const plans = [
       "Custom API calls",
     ],
     popular: false,
+    gradient: "from-emerald-500/10 via-teal-500/5 to-cyan-500/10",
+    buttonVariant: "outline" as const,
   },
 ];
 
@@ -77,8 +85,12 @@ const item = {
 
 export const Pricing = () => {
   return (
-    <section className="py-20 bg-gray-50">
-      <div className="container px-4 md:px-6">
+    <section className="py-20 bg-gray-50/50 relative overflow-hidden">
+      {/* Background decorations */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+      <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white" />
+
+      <div className="container px-4 md:px-6 relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -86,7 +98,7 @@ export const Pricing = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl font-bold tracking-tight mb-4">
+          <h2 className="text-3xl font-bold tracking-tight mb-4 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
             Pick the plan that&apos;s right for you
           </h2>
           <p className="text-muted-foreground max-w-[600px] mx-auto">
@@ -105,24 +117,34 @@ export const Pricing = () => {
           {plans.map((plan, i) => (
             <motion.div key={i} variants={item}>
               <Card
-                className={`h-full relative ${
-                  plan.popular ? "border-primary shadow-lg" : ""
+                className={`group h-full relative overflow-hidden transition-all duration-300 hover:shadow-xl ${
+                  plan.popular
+                    ? "border-primary shadow-lg scale-105"
+                    : "hover:scale-[1.02]"
                 }`}
               >
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${plan.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                />
+
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="bg-primary text-primary-foreground text-sm font-medium px-3 py-1 rounded-full">
+                    <span className="bg-gradient-to-r from-primary to-purple-600 text-primary-foreground text-sm font-medium px-3 py-1 rounded-full shadow-lg flex items-center gap-1">
+                      <Sparkles className="w-3 h-3" />
                       Most Popular
                     </span>
                   </div>
                 )}
-                <CardHeader>
+
+                <CardHeader className="relative">
                   <CardTitle>
-                    <h3 className="text-2xl font-bold">{plan.name}</h3>
+                    <h3 className="text-2xl font-bold group-hover:text-primary transition-colors">
+                      {plan.name}
+                    </h3>
                     <div className="mt-4 flex items-baseline gap-x-2">
                       {plan.price !== "Custom" ? (
                         <>
-                          <span className="text-5xl font-bold tracking-tight">
+                          <span className="text-5xl font-bold tracking-tight bg-gradient-to-br from-gray-900 to-gray-600 bg-clip-text text-transparent">
                             ₹{plan.price}
                           </span>
                           <span className="text-sm font-semibold leading-6 tracking-wide text-muted-foreground">
@@ -130,22 +152,26 @@ export const Pricing = () => {
                           </span>
                         </>
                       ) : (
-                        <span className="text-2xl font-semibold">
+                        <span className="text-2xl font-semibold bg-gradient-to-br from-gray-900 to-gray-600 bg-clip-text text-transparent">
                           Need-based Pricing
                         </span>
                       )}
                     </div>
                   </CardTitle>
-                  <p className="mt-4 text-sm text-muted-foreground">
+                  <p className="mt-4 text-sm text-muted-foreground group-hover:text-gray-600 transition-colors">
                     {plan.description}
                   </p>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="relative">
                   <ul className="mt-6 space-y-4">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex gap-x-3">
-                        <Check className="h-6 w-5 flex-none text-primary" />
-                        <span className="text-sm leading-6 text-muted-foreground">
+                        <Check
+                          className={`h-6 w-5 flex-none ${
+                            plan.popular ? "text-primary" : "text-gray-500/80"
+                          } group-hover:text-primary transition-colors`}
+                        />
+                        <span className="text-sm leading-6 text-muted-foreground group-hover:text-gray-600 transition-colors">
                           {feature}
                         </span>
                       </li>
@@ -153,10 +179,12 @@ export const Pricing = () => {
                   </ul>
                   <div className="mt-8">
                     <Button
-                      className="w-full"
-                      variant={
-                        plan.name === "Enterprise" ? "outline" : "default"
-                      }
+                      className={`w-full group ${
+                        plan.buttonVariant === "default"
+                          ? "bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-lg hover:shadow-primary/20"
+                          : "hover:bg-primary/5"
+                      }`}
+                      variant={plan.buttonVariant}
                     >
                       {plan.name === "Enterprise"
                         ? "Contact Sales"
