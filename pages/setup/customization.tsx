@@ -127,7 +127,7 @@ const CustomizationSetup: NextPage = () => {
 
       await response.json();
       toast.success("Customization saved successfully");
-      await router.push("/setup/complete");
+      await router.push("/setup/test");
     } catch (error) {
       toast.error("Failed to save customization");
     } finally {

@@ -101,23 +101,20 @@ const Register: NextPage = () => {
   const handleCredentialsSignUp = async (data: RegisterForm) => {
     try {
       setIsLoading(true);
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+
+      const result = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+        callbackUrl: "/setup/organization",
       });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Registration failed");
+      if (result?.error) {
+        throw new Error(result.error);
       }
 
       toast.success("Account created successfully!");
-      await signIn("credentials", {
-        email: data.email,
-        password: data.password,
-        callbackUrl: "/setup/organization",
-      });
+      window.location.href = result?.url || "/setup/organization";
     } catch (error) {
       toast.error(
         error instanceof Error
