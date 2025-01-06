@@ -2,6 +2,8 @@
 
 BeyondChat is an AI-powered customer support platform that helps businesses provide instant, intelligent responses to their customers. Built with modern technologies and best practices in mind.
 
+https://beyondchat.vercel.app
+
 ## Features
 
 - 🤖 AI-Powered Responses
