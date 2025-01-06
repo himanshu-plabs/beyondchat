@@ -182,7 +182,7 @@ const CustomizationSetup: NextPage = () => {
                 className="flex flex-col h-full"
               >
                 <ScrollArea className="flex-1 p-4 md:p-6">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-10">
                     <AppearanceForm control={form.control} />
                     <BehaviorForm control={form.control} />
                   </div>
