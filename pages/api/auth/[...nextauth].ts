@@ -112,8 +112,8 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: "/login",
-    error: "/login",
+    signIn: "/register",
+    error: "/register",
     verifyRequest: "/verify-request",
   },
   session: {
