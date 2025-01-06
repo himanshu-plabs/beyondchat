@@ -12,42 +12,24 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { CopyIcon, CheckIcon, XIcon, AlertTriangleIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import {
+  CopyIcon,
+  CheckIcon,
+  XIcon,
+  CodeIcon,
+  MailIcon,
+  RocketIcon,
+  ArrowRightIcon,
+} from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { Badge } from "@/components/ui/badge";
+import { motion, AnimatePresence } from "framer-motion";
 
-interface Message {
-  role: "user" | "assistant";
-  content: string;
-}
-
-type IntegrationStatus = "pending" | "success" | "error";
 type TestStep = "initial" | "deep" | "complete";
 
 interface TestResult {
@@ -56,21 +38,8 @@ interface TestResult {
   message: string;
 }
 
-const feedbackSchema = z.object({
-  category: z.enum(["accuracy", "appearance", "performance", "other"]),
-  description: z.string().min(10, "Description must be at least 10 characters"),
-  priority: z.enum(["low", "medium", "high"]),
-  screenshot: z.any().optional(),
-});
-
-type FeedbackForm = z.infer<typeof feedbackSchema>;
-
 const TestPage: NextPage = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputValue, setInputValue] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState("");
   const [testResults, setTestResults] = useState<TestResult[]>([
     {
       step: "initial",
@@ -88,25 +57,8 @@ const TestPage: NextPage = () => {
       message: "Finalizing integration...",
     },
   ]);
-  const [integrationStatus, setIntegrationStatus] =
-    useState<IntegrationStatus>("pending");
-  const router = useRouter();
   const [verificationOpen, setVerificationOpen] = useState(false);
-
-  const form = useForm<FeedbackForm>({
-    resolver: zodResolver(feedbackSchema),
-    defaultValues: {
-      category: "accuracy",
-      description: "",
-      priority: "medium",
-    },
-  });
-
-  const onSubmitFeedback = (data: FeedbackForm) => {
-    toast.success("Feedback submitted successfully");
-    // TODO: Send feedback data to API
-    console.log("Feedback data:", data);
-  };
+  const router = useRouter();
 
   const snippetCode = `<script>
   window.BEYONDCHAT_CONFIG = {
@@ -115,40 +67,6 @@ const TestPage: NextPage = () => {
   };
 </script>
 <script async src="https://cdn.beyondchat.ai/widget.js"></script>`;
-
-  const handleSendMessage = async (message: string) => {
-    if (!message.trim()) return;
-
-    const newMessages = [
-      ...messages,
-      { role: "user", content: message } as Message,
-    ];
-    setMessages(newMessages);
-    setInputValue("");
-    setIsTyping(true);
-
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message, history: messages }),
-      });
-
-      if (!response.ok) throw new Error("Failed to get response");
-
-      const data = await response.json();
-      setMessages([
-        ...newMessages,
-        { role: "assistant", content: data.message },
-      ]);
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to get response";
-      toast.error(errorMessage);
-    } finally {
-      setIsTyping(false);
-    }
-  };
 
   const copyToClipboard = async () => {
     try {
@@ -241,9 +159,6 @@ const TestPage: NextPage = () => {
         )
       );
 
-      setIntegrationStatus("success");
-      toast.success("Integration verified successfully");
-
       // Wait a bit to show success state
       await new Promise((resolve) => setTimeout(resolve, 1500));
       setVerificationOpen(false);
@@ -258,160 +173,90 @@ const TestPage: NextPage = () => {
             : result
         )
       );
-      setIntegrationStatus("error");
-      toast.error(errorMessage);
-    }
-  };
-
-  const runIntegrationTest = async () => {
-    try {
-      // Initial Check
-      setTestResults((prev) =>
-        prev.map((result) =>
-          result.step === "initial"
-            ? {
-                ...result,
-                status: "pending",
-                message: "Checking domain configuration...",
-              }
-            : result
-        )
-      );
-
-      const domainResponse = await fetch("/api/verify-domain");
-      if (!domainResponse.ok) throw new Error("Domain verification failed");
-
-      setTestResults((prev) =>
-        prev.map((result) =>
-          result.step === "initial"
-            ? {
-                ...result,
-                status: "success",
-                message: "Domain configuration verified",
-              }
-            : result
-        )
-      );
-
-      // Deep Verification
-      setTestResults((prev) =>
-        prev.map((result) =>
-          result.step === "deep"
-            ? {
-                ...result,
-                status: "pending",
-                message: "Testing widget functionality...",
-              }
-            : result
-        )
-      );
-
-      const widgetResponse = await fetch("/api/verify-widget");
-      if (!widgetResponse.ok) throw new Error("Widget verification failed");
-
-      setTestResults((prev) =>
-        prev.map((result) =>
-          result.step === "deep"
-            ? {
-                ...result,
-                status: "success",
-                message: "Widget functionality verified",
-              }
-            : result
-        )
-      );
-
-      // Complete Integration
-      setTestResults((prev) =>
-        prev.map((result) =>
-          result.step === "complete"
-            ? {
-                ...result,
-                status: "pending",
-                message: "Finalizing integration...",
-              }
-            : result
-        )
-      );
-
-      const integrationResponse = await fetch("/api/complete-integration");
-      if (!integrationResponse.ok)
-        throw new Error("Integration completion failed");
-
-      setTestResults((prev) =>
-        prev.map((result) =>
-          result.step === "complete"
-            ? { ...result, status: "success", message: "Integration complete" }
-            : result
-        )
-      );
-
-      setIntegrationStatus("success");
-      toast.success("Integration completed successfully");
-      setTimeout(() => router.push("/setup/complete"), 2000);
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Integration test failed";
-      setTestResults((prev) =>
-        prev.map((result) =>
-          result.status === "pending"
-            ? { ...result, status: "error", message: errorMessage }
-            : result
-        )
-      );
-      setIntegrationStatus("error");
-      toast.error(errorMessage);
     }
   };
 
   return (
     <MainLayout showProgress currentStep={3} totalSteps={5}>
-      <div className="container max-w-[1200px] px-4 md:px-6 py-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="container max-w-[1200px] px-4 md:px-6 py-6"
+      >
         <div className="space-y-6">
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl">
-              Integrate Your Chatbot
-            </h1>
+            <div className="flex items-center space-x-2">
+              <RocketIcon className="h-8 w-8 text-primary" />
+              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                Integrate Your Chatbot
+              </h1>
+            </div>
             <p className="text-gray-500 dark:text-gray-400">
-              Add the chatbot to your website
+              Add the chatbot to your website in just a few steps
             </p>
           </div>
 
-          <div className="grid gap-6">
-            <Card>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="grid gap-6"
+          >
+            <Card className="border-primary/20 shadow-lg">
               <CardHeader>
-                <CardTitle>Integration</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <CodeIcon className="h-5 w-5 text-primary" />
+                  Integration
+                </CardTitle>
                 <CardDescription>
-                  Add the chatbot to your website
+                  Choose your preferred integration method
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Tabs defaultValue="code">
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="code">Code Snippet</TabsTrigger>
-                    <TabsTrigger value="email">Email Instructions</TabsTrigger>
+                <Tabs defaultValue="code" className="w-full">
+                  <TabsList className="grid w-full grid-cols-2 mb-6">
+                    <TabsTrigger
+                      value="code"
+                      className="data-[state=active]:bg-primary data-[state=active]:text-white"
+                    >
+                      <CodeIcon className="h-4 w-4 mr-2" />
+                      Code Snippet
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="email"
+                      className="data-[state=active]:bg-primary data-[state=active]:text-white"
+                    >
+                      <MailIcon className="h-4 w-4 mr-2" />
+                      Email Instructions
+                    </TabsTrigger>
                   </TabsList>
                   <TabsContent value="code" className="space-y-4">
                     <div className="relative">
-                      <pre className="rounded-lg bg-muted p-4 overflow-x-auto">
-                        <code className="text-sm">{snippetCode}</code>
+                      <pre className="rounded-lg bg-secondary/50 p-4 overflow-x-auto border border-primary/20">
+                        <code className="text-sm font-mono">{snippetCode}</code>
                       </pre>
                       <Button
                         size="icon"
                         variant="ghost"
-                        className="absolute right-2 top-2"
+                        className="absolute right-2 top-2 hover:bg-primary/20"
                         onClick={copyToClipboard}
                       >
                         {copied ? (
-                          <CheckIcon className="h-4 w-4" />
+                          <CheckIcon className="h-4 w-4 text-green-500" />
                         ) : (
                           <CopyIcon className="h-4 w-4" />
                         )}
                       </Button>
                     </div>
-                    <p className="text-sm text-muted-foreground">
-                      Add this code to your website's HTML, just before the
-                      closing {"</body>"} tag.
+                    <p className="text-sm text-muted-foreground flex items-center gap-2">
+                      <Badge
+                        variant="outline"
+                        className="text-primary border-primary/50"
+                      >
+                        Tip
+                      </Badge>
+                      Add this code to your website&apos;s HTML, just before the
+                      closing &lt;/body&gt; tag.
                     </p>
                   </TabsContent>
                   <TabsContent value="email" className="space-y-4">
@@ -421,11 +266,12 @@ const TestPage: NextPage = () => {
                     </p>
                     <Button
                       variant="outline"
-                      className="w-full"
+                      className="w-full hover:bg-primary/20 border-primary/50"
                       onClick={() =>
                         toast.success("Instructions sent successfully")
                       }
                     >
+                      <MailIcon className="h-4 w-4 mr-2" />
                       Email Instructions
                     </Button>
                   </TabsContent>
@@ -433,38 +279,50 @@ const TestPage: NextPage = () => {
 
                 <div className="mt-6">
                   <Button
-                    variant="outline"
-                    className="w-full"
+                    className="w-full bg-primary hover:bg-primary/90 text-white group"
                     onClick={verifyIntegration}
                   >
                     Verify Integration
+                    <ArrowRightIcon className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </div>
               </CardContent>
             </Card>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
+
       <Dialog open={verificationOpen} onOpenChange={setVerificationOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Verifying Integration</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <RocketIcon className="h-5 w-5 text-primary" />
+              Verifying Integration
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
-            {testResults.map((result) => (
-              <div key={result.step} className="flex items-center gap-3">
-                {result.status === "pending" && (
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                )}
-                {result.status === "success" && (
-                  <CheckIcon className="h-4 w-4 text-green-500" />
-                )}
-                {result.status === "error" && (
-                  <XIcon className="h-4 w-4 text-red-500" />
-                )}
-                <p className="text-sm">{result.message}</p>
-              </div>
-            ))}
+            <AnimatePresence>
+              {testResults.map((result) => (
+                <motion.div
+                  key={result.step}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="flex items-center gap-3 p-2 rounded-md bg-secondary/30"
+                >
+                  {result.status === "pending" && (
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                  )}
+                  {result.status === "success" && (
+                    <CheckIcon className="h-4 w-4 text-green-500" />
+                  )}
+                  {result.status === "error" && (
+                    <XIcon className="h-4 w-4 text-red-500" />
+                  )}
+                  <p className="text-sm">{result.message}</p>
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </div>
         </DialogContent>
       </Dialog>
