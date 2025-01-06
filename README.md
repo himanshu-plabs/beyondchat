@@ -1,8 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# BeyondChat
+
+BeyondChat is an AI-powered customer support platform that helps businesses provide instant, intelligent responses to their customers. Built with modern technologies and best practices in mind.
+
+## Features
+
+- 🤖 AI-Powered Responses
+- 🎨 Customizable Chat Widget
+- 📊 Analytics Dashboard
+- 🔄 Automated Training
+- 🎯 Context-Aware Responses
+- 🌙 Dark/Light Mode
+- 📱 Mobile-First Design
+
+## Tech Stack
+
+- **Framework**: Next.js with TypeScript
+- **Styling**: TailwindCSS
+- **UI Components**: shadcn/ui
+- **Form Handling**: React Hook Form with Zod validation
+- **Data Fetching**: React Query
+- **Authentication**: NextAuth.js
+- **Notifications**: React Toast
+- **Email**: Resend
+- **Tables**: React Table
+- **Animations**: Framer Motion
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository:
+
+```bash
+git clone https://github.com/himanshu-plabs/beyondchat.git
+cd beyondchat
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+3. Set up environment variables:
+
+```bash
+cp .env.example .env.local
+```
+
+4. Start the development server:
 
 ```bash
 npm run dev
@@ -10,31 +58,55 @@ npm run dev
 yarn dev
 # or
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the application.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- `/pages` - Next.js pages and API routes
+- `/components` - Reusable React components
+- `/lib` - Utility functions and shared logic
+- `/types` - TypeScript type definitions
+- `/prisma` - Database schema and migrations
+- `/public` - Static assets
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+## Key Features
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Organization Setup
 
-## Learn More
+- Easy onboarding process
+- Website scanning and content analysis
+- Automated knowledge base creation
 
-To learn more about Next.js, take a look at the following resources:
+### AI Training
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+- Content review and approval system
+- Training progress monitoring
+- Performance metrics tracking
+- Quality assurance tools
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Customization
 
-## Deploy on Vercel
+- Theme customization (colors, fonts, position)
+- Behavior settings (welcome message, tone, operating hours)
+- Widget appearance preview
+- Mobile-responsive design
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Mobile Optimization
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+- Bottom navigation
+- Touch-friendly inputs (min 44px)
+- Swipe gestures
+- Responsive tables
+- Full-screen modals
+- Pull-to-refresh
+- Infinite scroll
+
+## Contributing
+
+Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
