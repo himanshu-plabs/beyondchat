@@ -6,7 +6,7 @@ import { signIn } from "next-auth/react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { FcGoogle } from "react-icons/fc";
-import { FiEye, FiEyeOff, FiMail } from "react-icons/fi";
+import { Eye, EyeOff, Mail, User, Lock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -129,15 +129,27 @@ export const AuthForms = () => {
   };
 
   return (
-    <>
+    <div className="w-full space-y-6">
       <Tabs
         value={authType}
         onValueChange={(v) => setAuthType(v as "credentials" | "email")}
         className="w-full"
       >
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="credentials">Password</TabsTrigger>
-          <TabsTrigger value="email">Magic Link</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 h-14 rounded-lg p-1 bg-muted/20">
+          <TabsTrigger
+            value="credentials"
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/90 data-[state=active]:to-primary data-[state=active]:text-primary-foreground rounded-md transition-all"
+          >
+            <Lock className="w-4 h-4 mr-2" />
+            Password
+          </TabsTrigger>
+          <TabsTrigger
+            value="email"
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/90 data-[state=active]:to-primary data-[state=active]:text-primary-foreground rounded-md transition-all"
+          >
+            <Mail className="w-4 h-4 mr-2" />
+            Magic Link
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="credentials">
@@ -156,13 +168,18 @@ export const AuthForms = () => {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-base">Name</FormLabel>
+                      <FormLabel className="text-base font-medium">
+                        Name
+                      </FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="John Doe"
-                          {...field}
-                          className="h-12 text-base"
-                        />
+                        <div className="relative">
+                          <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                          <Input
+                            placeholder="John Doe"
+                            {...field}
+                            className="h-12 text-base pl-11 transition-colors focus:ring-2 focus:ring-primary/20"
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -180,14 +197,19 @@ export const AuthForms = () => {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-base">Email</FormLabel>
+                      <FormLabel className="text-base font-medium">
+                        Email
+                      </FormLabel>
                       <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="john@example.com"
-                          {...field}
-                          className="h-12 text-base"
-                        />
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                          <Input
+                            type="email"
+                            placeholder="john@example.com"
+                            {...field}
+                            className="h-12 text-base pl-11 transition-colors focus:ring-2 focus:ring-primary/20"
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -205,23 +227,26 @@ export const AuthForms = () => {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-base">Password</FormLabel>
+                      <FormLabel className="text-base font-medium">
+                        Password
+                      </FormLabel>
                       <FormControl>
                         <div className="relative">
+                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                           <Input
                             type={showPassword ? "text" : "password"}
                             {...field}
-                            className="h-12 text-base pr-10"
+                            className="h-12 text-base pl-11 pr-11 transition-colors focus:ring-2 focus:ring-primary/20"
                           />
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 hover:text-primary transition-colors"
                           >
                             {showPassword ? (
-                              <FiEyeOff className="h-5 w-5 text-gray-500" />
+                              <EyeOff className="h-5 w-5" />
                             ) : (
-                              <FiEye className="h-5 w-5 text-gray-500" />
+                              <Eye className="h-5 w-5" />
                             )}
                           </button>
                         </div>
@@ -246,15 +271,15 @@ export const AuthForms = () => {
                         <Checkbox
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          className="h-5 w-5"
+                          className="h-5 w-5 rounded-md border-2 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
-                        <FormLabel className="text-sm">
+                        <FormLabel className="text-sm text-muted-foreground">
                           I accept the{" "}
                           <a
                             href="/terms"
-                            className="text-primary underline-offset-4 hover:underline"
+                            className="text-primary underline-offset-4 hover:underline font-medium"
                           >
                             terms and conditions
                           </a>
@@ -274,12 +299,19 @@ export const AuthForms = () => {
                 <Button
                   type="submit"
                   className={cn(
-                    "w-full h-12 text-base transition-all",
+                    "w-full h-12 text-base font-medium transition-all bg-gradient-to-r from-primary/90 to-primary hover:opacity-90",
                     isLoading && "animate-pulse"
                   )}
                   disabled={isLoading}
                 >
-                  {isLoading ? "Creating your account..." : "Create account"}
+                  {isLoading ? (
+                    "Creating your account..."
+                  ) : (
+                    <>
+                      Create account
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </>
+                  )}
                 </Button>
               </motion.div>
             </form>
@@ -302,14 +334,19 @@ export const AuthForms = () => {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-base">Email</FormLabel>
+                      <FormLabel className="text-base font-medium">
+                        Email
+                      </FormLabel>
                       <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="john@example.com"
-                          {...field}
-                          className="h-12 text-base"
-                        />
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                          <Input
+                            type="email"
+                            placeholder="john@example.com"
+                            {...field}
+                            className="h-12 text-base pl-11 transition-colors focus:ring-2 focus:ring-primary/20"
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -331,15 +368,15 @@ export const AuthForms = () => {
                         <Checkbox
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          className="h-5 w-5"
+                          className="h-5 w-5 rounded-md border-2 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
-                        <FormLabel className="text-sm">
+                        <FormLabel className="text-sm text-muted-foreground">
                           I accept the{" "}
                           <a
                             href="/terms"
-                            className="text-primary underline-offset-4 hover:underline"
+                            className="text-primary underline-offset-4 hover:underline font-medium"
                           >
                             terms and conditions
                           </a>
@@ -359,12 +396,12 @@ export const AuthForms = () => {
                 <Button
                   type="submit"
                   className={cn(
-                    "w-full h-12 text-base transition-all",
+                    "w-full h-12 text-base font-medium transition-all bg-gradient-to-r from-primary/90 to-primary hover:opacity-90",
                     isLoading && "animate-pulse"
                   )}
                   disabled={isLoading}
                 >
-                  <FiMail className="mr-2 h-5 w-5" />
+                  <Mail className="mr-2 h-5 w-5" />
                   {isLoading ? "Sending magic link..." : "Send magic link"}
                 </Button>
               </motion.div>
@@ -373,12 +410,12 @@ export const AuthForms = () => {
         </TabsContent>
       </Tabs>
 
-      <div className="relative">
+      <div className="relative py-4">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
+          <span className="w-full border-t border-muted" />
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="bg-background px-2 text-muted-foreground">
+          <span className="bg-background px-4 text-muted-foreground">
             Or continue with
           </span>
         </div>
@@ -387,7 +424,7 @@ export const AuthForms = () => {
       <Button
         variant="outline"
         type="button"
-        className="w-full h-12 text-base"
+        className="w-full h-12 text-base font-medium border-2 hover:bg-muted/5 transition-colors"
         onClick={() => signIn("google", { callbackUrl: "/setup/organization" })}
       >
         <FcGoogle className="mr-2 h-5 w-5" />
@@ -399,6 +436,6 @@ export const AuthForms = () => {
         onClose={() => setShowMagicLinkDialog(false)}
         email={magicLinkEmail}
       />
-    </>
+    </div>
   );
 };
