@@ -76,6 +76,44 @@ export function AppearanceForm({ control }: AppearanceFormProps) {
         <CardContent className="space-y-6">
           <FormField
             control={control}
+            name="theme.position"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-md bg-gradient-to-br from-primary/10 to-purple-500/10 border border-primary/10">
+                    <Layout className="h-4 w-4 text-primary" />
+                  </div>
+                  <FormLabel className="text-sm font-medium text-muted-foreground">
+                    Widget Position
+                  </FormLabel>
+                </div>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger className="bg-white/50 backdrop-blur-sm border-primary/10 transition-all hover:border-primary/20 focus:border-primary focus:ring-2 focus:ring-primary/20">
+                      <SelectValue placeholder="Select a position" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="bg-white/80 backdrop-blur-sm border-primary/10">
+                    {positions.map((position) => (
+                      <SelectItem
+                        key={position.value}
+                        value={position.value}
+                        className="hover:bg-primary/5 focus:bg-primary/5 focus:text-foreground"
+                      >
+                        {position.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
             name="theme.primaryColor"
             render={({ field }) => (
               <FormItem>
@@ -148,45 +186,6 @@ export function AppearanceForm({ control }: AppearanceFormProps) {
                         className="hover:bg-primary/5 focus:bg-primary/5 focus:text-foreground"
                       >
                         {font.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={control}
-            name="theme.position"
-            render={({ field }) => (
-              <FormItem>
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 rounded-md bg-gradient-to-br from-primary/10 to-purple-500/10 border border-primary/10">
-                    <Layout className="h-4 w-4 text-primary" />
-                  </div>
-                  <FormLabel className="text-sm font-medium text-muted-foreground">
-                    Widget Position
-                  </FormLabel>
-                </div>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="bg-white/50 backdrop-blur-sm border-primary/10 transition-all hover:border-primary/20 focus:border-primary focus:ring-2 focus:ring-primary/20">
-                      <SelectValue placeholder="Select a position" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="bg-white/80 backdrop-blur-sm border-primary/10">
-                    {positions.map((position) => (
-                      <SelectItem
-                        key={position.value}
-                        value={position.value}
-                        className="hover:bg-primary/5 focus:bg-primary/5 focus:text-foreground"
-                      >
-                        {position.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
