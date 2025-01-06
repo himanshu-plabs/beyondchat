@@ -51,7 +51,7 @@ export function Layout({ children }: LayoutProps) {
       />
 
       {/* Main Layout */}
-      <div className="flex pt-16">
+      <div className="flex">
         {/* Sidebar */}
         <aside
           id="sidebar"
